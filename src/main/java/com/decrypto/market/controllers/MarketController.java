@@ -33,11 +33,12 @@ public class MarketController {
     private MarketService marketService;
     
     @CrossOrigin
-    @PostMapping
-        @Operation(summary = "Create a new resource", description = "This method create a new Market.")
+    @Operation(summary = "Crea un recurso", description = "Este método crea un nuevo mercado.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Created resource"),
+        @ApiResponse(responseCode = "201", description = "Recurso creado"),
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe")
     })
+    @PostMapping
     public ResponseEntity<?> createMarket(@RequestBody Market market){
         
         Market newMarket = marketService.save(market);
@@ -46,12 +47,21 @@ public class MarketController {
     }
     
     @CrossOrigin
+    @Operation(summary = "Obtiene todos los recursos", description = "Este metodo obtiene una lista de todos los mercados existentes.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+    })
     @GetMapping("/all")
     public List<Market> getAllMarkets(){
         return marketService.getAllMarkets();
     }
     
     @CrossOrigin
+    @Operation(summary = "Obtiene un recurso", description = "Este metodo obtiene un mercado por id.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @GetMapping("/detail/{id}")
     public ResponseEntity<Market> getClientById(@PathVariable Long id){  
         Optional<Market> market = marketService.getMarketById(id);
@@ -63,6 +73,11 @@ public class MarketController {
     }
     
     @CrossOrigin
+    @Operation(summary = "Elimina un recurso", description = "Este método elimina un mercado.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "El recurso ya fue eliminado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMarket(@PathVariable Long id){
         if(!marketService.exist(id)){
@@ -73,6 +88,12 @@ public class MarketController {
     }
     
     @CrossOrigin
+    @Operation(summary = "Actualiza un recurso", description = "Este método actualiza un mercado.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "El recurso fue actualizado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe")
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateMarket(@PathVariable Long id,@RequestBody Market market){
         if(!marketService.exist(id)){
@@ -84,7 +105,7 @@ public class MarketController {
             Market marketUpdate = marketService.save(market);
             return ResponseEntity.ok(marketUpdate);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("The market already exist");
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El mercado ya existe");
         }
     }
     
