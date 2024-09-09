@@ -34,12 +34,21 @@ public class ClientController {
     private ClientService clientService;
     
     @CrossOrigin
+    @Operation(summary = "Obtener todos los recursos", description = "Este metodo obtiene una lista de todos los comitentes existentes.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+    })
     @GetMapping("/all")
     public List<Client> getAllsClients(){
         return clientService.getAllsClients();
     }
     
     @CrossOrigin
+    @Operation(summary = "Obtener un recurso", description = "Este metodo obtiene un comitente por id.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @GetMapping("/detail/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable Long id){  
         Optional<Client> client = clientService.getClientById(id);
@@ -51,22 +60,27 @@ public class ClientController {
     }
     
     @CrossOrigin
-    @PostMapping
-        @Operation(summary = "Obtener un recurso", description = "Este método crea un nuevo comitente.")
+    @Operation(summary = "Crear un recurso", description = "Este método crea un nuevo comitente.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
-        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+        @ApiResponse(responseCode = "201", description = "Recurso creado"),
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe")
     })
+    @PostMapping
     public ResponseEntity<?> createClient(@RequestBody Client client){
         try{
         Client newClient = clientService.save(client);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(newClient);
         }catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("The client already exist");
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El cliente ya existe");
         }
     }
     
     @CrossOrigin
+    @Operation(summary = "Elimina un recurso", description = "Este método elimina un comitente.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
+        @ApiResponse(responseCode = "204", description = "El recurso ya fue eliminado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id){
         if(!clientService.exist(id)){
@@ -77,6 +91,12 @@ public class ClientController {
     }
     
     @CrossOrigin
+    @Operation(summary = "Actualiza un recurso", description = "Este método actualiza un comitente.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe"),
+        @ApiResponse(responseCode = "200", description = "El recurso fue actualizado exitosamente")
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id,@RequestBody Client client){
         if(!clientService.exist(id)){
@@ -88,11 +108,15 @@ public class ClientController {
             Client clientUpdate = clientService.save(client);
             return ResponseEntity.ok(clientUpdate);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("The client already exist");
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El cliente ya existe");
         }
     }
     
-      @GetMapping("/stats")
+    @GetMapping("/stats")
+    @Operation(summary = "Obtiene una lista de recursos", description = "Este método obtiene la cantidad de comitentes existentes por cada pais y cada mercado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "El recurso fue obtenido exitosamente")
+    })
     public List<ClientsPercertageResponseDto> getClientsCount() {
         return clientService.getClientsCountByMarketAndCountry();
     }
