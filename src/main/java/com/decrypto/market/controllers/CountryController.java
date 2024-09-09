@@ -34,25 +34,31 @@ public class CountryController {
     private CountryService countryService;
     
     @CrossOrigin
-    @PostMapping
-    @Operation(summary = "Obtener un recurso", description = "Este método crea un nuevo comitente.")
+    @Operation(summary = "Crea un recurso", description = "Este método crea un nuevo pais (Solo se permiten Argentina y Uruguay).")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
-        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+        @ApiResponse(responseCode = "201", description = "Recurso creado"),
+        @ApiResponse(responseCode = "409", description = "Recurso ya existente"),
+        @ApiResponse(responseCode = "400", description = "Error en el request")
     })
+    @PostMapping
     public ResponseEntity<?> createCountry(@RequestBody Country country){
         try{
             Country newCountry = countryService.save(country);
             return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(newCountry);
         }catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("The country already exist");
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El pais ya existe");
         }catch (Exception ex) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body("Error");
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body("Ocurrio un error");
         }
     }
     
     
     @CrossOrigin
+    @Operation(summary = "Obtiene un recurso", description = "Este metodo obtiene un pais por id.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @GetMapping("/detail/{id}")
     public ResponseEntity<Country> getCountryById(@PathVariable Long id){  
         Optional<Country> country = countryService.getCountryById(id);
@@ -66,6 +72,10 @@ public class CountryController {
 
     
     @CrossOrigin
+    @Operation(summary = "Obtiene todos los recursos", description = "Este metodo obtiene una lista de todos los paises existentes.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
+    })
     @GetMapping("/all")
     public List<Country> getAllCountries(){
         return countryService.getAllCountries();
@@ -73,6 +83,11 @@ public class CountryController {
     
     
     @CrossOrigin
+    @Operation(summary = "Elimina un recurso", description = "Este método elimina un pais.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "El recurso ya fue eliminado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCountry(@PathVariable Long id){
         if(!countryService.exist(id)){
@@ -83,6 +98,13 @@ public class CountryController {
     }
     
     @CrossOrigin
+    @Operation(summary = "Actualiza un recurso", description = "Este método actualiza un pais.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "El recurso fue actualizado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe"),
+        @ApiResponse(responseCode = "400", description = "Error en el request")
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id,@RequestBody Country country){
         if(!countryService.exist(id)){
@@ -94,7 +116,9 @@ public class CountryController {
             Country countryUpdate = countryService.save(country);
             return ResponseEntity.ok(countryUpdate);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("The country already exist");
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El pais ya existe");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body("Ocurrio un error");
         }
     }
     
