@@ -34,7 +34,7 @@ public class ClientController {
     private ClientService clientService;
     
     @CrossOrigin
-    @Operation(summary = "Obtener todos los recursos", description = "Este metodo obtiene una lista de todos los comitentes existentes.")
+    @Operation(summary = "Obtiene todos los recursos", description = "Este metodo obtiene una lista de todos los comitentes existentes.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
     })
@@ -44,7 +44,7 @@ public class ClientController {
     }
     
     @CrossOrigin
-    @Operation(summary = "Obtener un recurso", description = "Este metodo obtiene un comitente por id.")
+    @Operation(summary = "Obtiene un recurso", description = "Este metodo obtiene un comitente por id.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Recurso encontrado"),
         @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
@@ -60,7 +60,7 @@ public class ClientController {
     }
     
     @CrossOrigin
-    @Operation(summary = "Crear un recurso", description = "Este método crea un nuevo comitente.")
+    @Operation(summary = "Crea un recurso", description = "Este método crea un nuevo comitente.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Recurso creado"),
         @ApiResponse(responseCode = "409", description = "El recurso ya existe")
@@ -78,8 +78,8 @@ public class ClientController {
     @CrossOrigin
     @Operation(summary = "Elimina un recurso", description = "Este método elimina un comitente.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
-        @ApiResponse(responseCode = "204", description = "El recurso ya fue eliminado")
+        @ApiResponse(responseCode = "204", description = "El recurso ya fue eliminado"),
+        @ApiResponse(responseCode = "404", description = "Recurso no encontrado")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id){
@@ -93,9 +93,9 @@ public class ClientController {
     @CrossOrigin
     @Operation(summary = "Actualiza un recurso", description = "Este método actualiza un comitente.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "El recurso fue actualizado exitosamente"),
         @ApiResponse(responseCode = "404", description = "Recurso no encontrado"),
-        @ApiResponse(responseCode = "409", description = "El recurso ya existe"),
-        @ApiResponse(responseCode = "200", description = "El recurso fue actualizado exitosamente")
+        @ApiResponse(responseCode = "409", description = "El recurso ya existe")
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id,@RequestBody Client client){
