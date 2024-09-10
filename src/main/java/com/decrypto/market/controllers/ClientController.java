@@ -63,15 +63,15 @@ public class ClientController {
     @Operation(summary = "Crea un recurso", description = "Este método crea un nuevo comitente.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Recurso creado"),
-        @ApiResponse(responseCode = "409", description = "El recurso ya existe")
+        @ApiResponse(responseCode = "404", description = "Ocurrio un error")
     })
     @PostMapping
     public ResponseEntity<?> createClient(@RequestBody Client client){
         try{
         Client newClient = clientService.save(client);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(newClient);
-        }catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body("El cliente ya existe");
+        }catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
     
