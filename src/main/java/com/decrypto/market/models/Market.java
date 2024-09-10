@@ -1,5 +1,6 @@
 package com.decrypto.market.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Market {
     @JoinColumn(name = "id_country", nullable = false)
     private Country country;
     
-    @ManyToMany(mappedBy = "markets")
+    @ManyToMany(mappedBy = "markets", cascade = {CascadeType.MERGE})
     private Set<Client> clients;
 
     public Long getId() {
