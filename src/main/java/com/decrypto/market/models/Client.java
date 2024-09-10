@@ -26,7 +26,7 @@ public class Client {
      @Column(unique = true)
     private String description;
      
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
         name = "clients_markets",
         joinColumns = @JoinColumn(name = "id_client"),
