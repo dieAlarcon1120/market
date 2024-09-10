@@ -15,7 +15,7 @@ Este sistema permite la gestión de Clientes, Mercados y Países, así como las 
 ## Tecnologías Utilizadas
 
 - **Java 17**
-- **Spring Boot**
+- **Spring Boot version 3.3.3**
 - **JPA (Java Persistence API)**
 - **Hibernate**
 - **Maven**
@@ -30,10 +30,10 @@ Este sistema permite la gestión de Clientes, Mercados y Países, así como las 
 ## Instalación
 
 1. Clona el repositorio:
-git clone https://github.com/dieAlarcon1120/market
-mvn clean install
-run
+- git clone https://github.com/dieAlarcon1120/market
+- mvn clean install
+- run
 
 ## Endpoints disponibles
 
-http://localhost:_PUERTO_LOCAL/swagger-ui/index.html
+- http://localhost:_PUERTO_LOCAL/swagger-ui/index.html
