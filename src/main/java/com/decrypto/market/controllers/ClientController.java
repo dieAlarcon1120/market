@@ -63,7 +63,7 @@ public class ClientController {
     @Operation(summary = "Crea un recurso", description = "Este método crea un nuevo comitente.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Recurso creado"),
-        @ApiResponse(responseCode = "404", description = "Ocurrio un error")
+        @ApiResponse(responseCode = "400", description = "Request erroneo")
     })
     @PostMapping
     public ResponseEntity<?> createClient(@RequestBody Client client){
@@ -71,7 +71,7 @@ public class ClientController {
         Client newClient = clientService.save(client);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(newClient);
         }catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body("Request erroneo");
         }
     }
     
